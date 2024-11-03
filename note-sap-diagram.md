@@ -14,5 +14,10 @@ sequenceDiagram
     server-->>browser: JSON data
     deactivate server
 
+    browser->>server: PUT notes_form
+    activate server
+    server-->>browser: status code: 200
+    deactivate server
 
 ```
+
