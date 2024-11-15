@@ -12,27 +12,14 @@ const Part = ({ part }) =>
     {part.name} {part.exercises}
   </p>
 
-const Content = ({ parts }) => 
-  <>
-    <Part
-      part={parts[0]} 
-    />
-    <Part
-      part={parts[1]} 
-    />
-    <Part
-      part={parts[2]} 
-    />      
-  </>
-
-const PrintParts = ({course}) => {
+const Content = ({ parts }) => {
   console.log("Printing the part names and IDs")
-  var nameId = course.parts.map(function(courses) {
-    return <main>courses.name + courses.id</main>
-  }
-
+  return(
+    <main>{parts.map(part => <main>{part.name}  {part.exercises}</main>)}</main>
   )
 }
+
+
 
 const App = () => {
   const course = {
@@ -59,12 +46,14 @@ const App = () => {
 
 
   const Course = ({course}) => {
-    console.log("This is the name", course.name)
+    console.log("Creating object Course")
     return(
       <div>
         <Header course={course}/>
         <Content parts={course.parts}/>
+
       </div>
+
     )
   }
 
