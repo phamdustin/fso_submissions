@@ -37,22 +37,7 @@ const App = () => {
     }
     setPoints(copy)
   }
-
-  /*
-  const printMostVoted = () => {
-    let string = "No anecdote has been voted for yet"
-    if (mostVotes > 0 && mostVotedAnecdote > -1) {
-      string = anecdotes[mostVotedAnecdote]
-    }
-    return (
-      <div>
-        <main>test</main>
-      </div>
-      
-    )
-      
-  }
-  */
+  
   
   return (
     <div>
