@@ -43,7 +43,11 @@ const App = () => {
       }
     ]
   }
-
+  const total = course.parts.reduce(function(sum,part) {
+    var localTotal = sum+part.exercises
+    console.log(`Total is ${localTotal}`)
+    return localTotal
+  }, 0)
 
   const Course = ({course}) => {
     console.log("Creating object Course")
@@ -51,7 +55,7 @@ const App = () => {
       <div>
         <Header course={course}/>
         <Content parts={course.parts}/>
-
+        <Total sum={total}/>
       </div>
 
     )
