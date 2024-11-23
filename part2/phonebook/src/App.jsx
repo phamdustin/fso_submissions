@@ -1,23 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import PrintAllNames from './components/PrintAllNames.jsx'
 import AddForm from './components/AddForm.jsx'
 import SearchFilter from './components/SearchFilter.jsx'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', number: '040-123456'}, 
-    { id: 2, name: 'Sergio Meyers', number: '39-44-5323523'},
-    { id: 3, name: 'Ada Lovelace', number: '12-43-234423'}
-  ]) 
-
-  const [filteredList, setFilteredList] = useState([
-    { id: 0, name: 'Arto Hellas', number: '040-123456'}, 
-    { id: -1, name: 'Sergio Meyers', number: '39-44-5323523'},
-    { id: -2, name: 'Ada Lovelace', number: '12-43-234423'}])
-
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+
+  useEffect(() => {
+    console.log("effect starting")
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'notes')
 
   const handleAddPerson = (event) => {
     event.preventDefault()
@@ -52,26 +54,15 @@ const App = () => {
   const handleFilterChange = (event) => {
     console.log(event.target.value)
     setNewFilter(event.target.value)
-    if (event.target.value!="") {
-      console.log("There is a filter applied")
-      const filterBySearch = persons.filter((person) => {
-        if (person.name.toString().toLowerCase().includes(event.target.value.toString().toLowerCase())) {return person}
-      }) 
-      setFilteredList(filterBySearch) 
-    } else {
-      setFilteredList(persons)
-    }
-
   }
   return (
     <div>
       <h2>Phonebook</h2>
       <SearchFilter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
       <h2>Add a new number</h2>
-       
       <AddForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleAddPerson={handleAddPerson} handleNumberChange={handleNumberChange}/>
       <h2>People</h2> 
-      <PrintAllNames people={filteredList}/> 
+      <PrintAllNames filter={newFilter} people={persons}/> 
     </div>
   )
 }
