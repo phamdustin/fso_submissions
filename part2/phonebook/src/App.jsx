@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 import PrintAllNames from './components/PrintAllNames.jsx'
 import AddForm from './components/AddForm.jsx'
@@ -61,6 +60,24 @@ const App = () => {
     console.log(event.target.value)
     setNewFilter(event.target.value)
   }
+
+  async function handleRemovePerson(event){
+    console.log(`Removing ${event.target.value}`)
+    await personService
+      .remove(event.target.value)
+      .then(response =>{
+        console.log("Removal complete")
+      })
+    
+    personService
+      .getAll()
+      .then(response => {
+        console.log('Promise fulfilled to get data from persons server')
+        setPersons(response)
+        console.log('Updated state of persons')
+      })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -68,7 +85,7 @@ const App = () => {
       <h2>Add a new number</h2>
       <AddForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleAddPerson={handleAddPerson} handleNumberChange={handleNumberChange}/>
       <h2>People</h2> 
-      <PrintAllNames filter={newFilter} people={persons}/> 
+      <PrintAllNames filter={newFilter} people={persons} handleRemovePerson={handleRemovePerson}/> 
     </div>
   )
 }
