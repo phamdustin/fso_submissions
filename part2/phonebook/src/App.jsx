@@ -15,28 +15,33 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
+        console.log('Promise fulfilled to get data from persons server')
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'notes')
 
   const handleAddPerson = (event) => {
     event.preventDefault()
     const personObject = {
-      id: String(persons.length+1),
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: String(persons.length+1)
     }
     var same = persons.find(function(person) {
       return person.name === personObject.name
     })
 
     if (!same) {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
-      console.log("Added " + personObject.name) 
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+          console.log("Added " + response.data.name) 
+        })
+
+
     } else {
       alert(`${personObject.name} is already in the phonebook.`)
     }
