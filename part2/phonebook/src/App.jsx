@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 import PrintAllNames from './components/PrintAllNames.jsx'
 import AddForm from './components/AddForm.jsx'
 import SearchFilter from './components/SearchFilter.jsx'
@@ -12,11 +13,11 @@ const App = () => {
 
   useEffect(() => {
     console.log("effect starting")
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('Promise fulfilled to get data from persons server')
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
 
@@ -32,13 +33,13 @@ const App = () => {
     })
 
     if (!same) {
-      axios
-        .post('http://localhost:3001/persons', personObject)
+      personService
+        .create(personObject)
         .then(response => {
-          setPersons(persons.concat(response.data))
+          setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
-          console.log("Added " + response.data.name) 
+          console.log("Added " + response.name) 
         })
 
 
