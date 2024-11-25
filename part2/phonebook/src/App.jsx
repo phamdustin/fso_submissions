@@ -3,12 +3,14 @@ import personService from './services/persons'
 import PrintAllNames from './components/PrintAllNames.jsx'
 import AddForm from './components/AddForm.jsx'
 import SearchFilter from './components/SearchFilter.jsx'
+import Notification from './components/notification.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     console.log("effect starting")
@@ -25,7 +27,7 @@ const App = () => {
 
 
     var same = persons.find(function(person) {
-      return person.name === newName
+      return person.name.toString().toLowerCase() === newName.toString().toLowerCase()
     })
 
     const personObject = {
@@ -45,7 +47,10 @@ const App = () => {
           setNewNumber('')
           console.log("Added " + response.name) 
         })
-
+      setErrorMessage(`${personObject.name} has been added to phonebook`)
+      setTimeout(()=> {
+        setErrorMessage(null)
+      },5000)
 
     } else {
       window.confirm(`${personObject.name} is already in the phonebook, replace the old number with a new one?`)
@@ -54,8 +59,8 @@ const App = () => {
       .then(response => {
         console.log(`Updated ${response.name} to ${response.number}` ) 
       })
-
-      await personService
+      
+      personService
       .getAll()
       .then(response => {
         console.log('Promise fulfilled to get data from persons server')
@@ -64,6 +69,10 @@ const App = () => {
         setNewNumber('')
         console.log("Added " + response.name) 
       })
+      setErrorMessage(`${personObject.name}'s number has been updated`)
+      setTimeout(()=> {
+        setErrorMessage(null)
+      },5000)
     }
   }
   
@@ -103,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage}/>
       <SearchFilter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
       <h2>Add a new number</h2>
       <AddForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleAddPerson={handleAddPerson} handleNumberChange={handleNumberChange}/>
