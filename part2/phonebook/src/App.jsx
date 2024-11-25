@@ -63,19 +63,21 @@ const App = () => {
 
   async function handleRemovePerson(event){
     console.log(`Removing ${event.target.value}`)
-    await personService
-      .remove(event.target.value)
-      .then(response =>{
-        console.log("Removal complete")
-      })
-    
-    personService
-      .getAll()
-      .then(response => {
-        console.log('Promise fulfilled to get data from persons server')
-        setPersons(response)
-        console.log('Updated state of persons')
-      })
+    if (window.confirm("Are you sure you want to delete?")) {
+      await personService
+        .remove(event.target.value)
+        .then(response =>{
+          console.log("Removal complete")
+        })
+      
+      personService
+        .getAll()
+        .then(response => {
+          console.log('Promise fulfilled to get data from persons server')
+          setPersons(response)
+          console.log('Updated state of persons')
+        })
+      }
   }
 
   return (
