@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [errorClass, setErrorClass] = useState('message')
 
   useEffect(() => {
     console.log("effect starting")
@@ -47,6 +48,7 @@ const App = () => {
           setNewNumber('')
           console.log("Added " + response.name) 
         })
+      setErrorClass('message')
       setErrorMessage(`${personObject.name} has been added to phonebook`)
       setTimeout(()=> {
         setErrorMessage(null)
@@ -58,8 +60,17 @@ const App = () => {
       .update(personObject.id,personObject)
       .then(response => {
         console.log(`Updated ${response.name} to ${response.number}` ) 
+        setErrorClass('message')
+        setErrorMessage(`${personObject.name} has been updated`)
       })
-      
+      .catch(error => {
+        setErrorClass('error')
+        setErrorMessage(`${personObject.name} was already removed from server`)
+        setTimeout(()=> {
+          setErrorMessage(null)
+        },5000)
+      })
+      setPersons(persons.filter(name => name.id !== personObject.id))
       personService
       .getAll()
       .then(response => {
@@ -69,10 +80,6 @@ const App = () => {
         setNewNumber('')
         console.log("Added " + response.name) 
       })
-      setErrorMessage(`${personObject.name}'s number has been updated`)
-      setTimeout(()=> {
-        setErrorMessage(null)
-      },5000)
     }
   }
   
@@ -112,7 +119,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage}/>
+      <Notification class={errorClass} message={errorMessage}/>
       <SearchFilter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
       <h2>Add a new number</h2>
       <AddForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleAddPerson={handleAddPerson} handleNumberChange={handleNumberChange}/>
