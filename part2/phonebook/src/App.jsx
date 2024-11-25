@@ -20,18 +20,23 @@ const App = () => {
       })
   }, [])
 
-  const handleAddPerson = (event) => {
+  async function handleAddPerson(event) {
     event.preventDefault()
+
+
+    var same = persons.find(function(person) {
+      return person.name === newName
+    })
+
     const personObject = {
       name: newName,
       number: newNumber,
-      id: String(persons.length+1)
+      id: same? same.id:String(persons.length+1)
     }
-    var same = persons.find(function(person) {
-      return person.name === personObject.name
-    })
+
 
     if (!same) {
+      console.log("New person being added to phonebook")
       personService
         .create(personObject)
         .then(response => {
@@ -43,7 +48,22 @@ const App = () => {
 
 
     } else {
-      alert(`${personObject.name} is already in the phonebook.`)
+      window.confirm(`${personObject.name} is already in the phonebook, replace the old number with a new one?`)
+      await personService
+      .update(personObject.id,personObject)
+      .then(response => {
+        console.log(`Updated ${response.name} to ${response.number}` ) 
+      })
+
+      await personService
+      .getAll()
+      .then(response => {
+        console.log('Promise fulfilled to get data from persons server')
+        setPersons(response)
+        setNewName('')
+        setNewNumber('')
+        console.log("Added " + response.name) 
+      })
     }
   }
   
