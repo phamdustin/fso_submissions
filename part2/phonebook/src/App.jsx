@@ -47,9 +47,13 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           console.log("Added " + response.name) 
+          setErrorClass('message')
+          setErrorMessage(`${personObject.name} has been added to phonebook`)
+        }).catch(error => {
+          console.log(error.response.data.error)
+          setErrorClass('error')
+          setErrorMessage(error.response.data.error)
         })
-      setErrorClass('message')
-      setErrorMessage(`${personObject.name} has been added to phonebook`)
       setTimeout(()=> {
         setErrorMessage(null)
       },5000)
