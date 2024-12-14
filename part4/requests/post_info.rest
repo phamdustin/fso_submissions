@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "LoL Blog",
+  "author": "Faker",
+  "url": "lolesports.com",
+  "likes": 12345
+}
