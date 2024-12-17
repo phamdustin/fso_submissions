@@ -16,13 +16,19 @@ blogRouter.get('/blogs', async (request, response) => {
 
 blogRouter.post('/blogs', async (request, response) => {
   console.log("post router")
-  const blog = new Blog(request.body)
-  if (!blog.likes) {
-    blog.likes = 0
+
+  if (!request.body.title || !request.body.url) {
+    return response.status(400).json({
+      error: "Missing title or url"
+    })
+  } else {
+    const blog = new Blog(request.body)
+    if (!blog.likes) { // default to 0
+      blog.likes = 0
+    }
+    const result = await blog.save()
+    response.status(201).json(result)
   }
-  const result = await blog.save()
-  response.status(201).json(result)
-  
 })
 
 module.exports = blogRouter

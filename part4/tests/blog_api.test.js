@@ -73,7 +73,7 @@ test('blog count returns 2', async() => {
     assert(titles.includes('A New World'))
   })
 
-  test.only("posting blog with likes property missing, default 0", async () => {
+  test("posting blog with likes property missing, default 0", async () => {
     const newBlog = {
       title: 'Will default to 0',
       author: 'ZERO',
@@ -89,6 +89,31 @@ test('blog count returns 2', async() => {
     const response = await api.get('/api/blogs')
     const likes = response.body.map(blog => blog.likes)
     assert(likes.includes(0))
+  })
+
+  test.only("posting blog with no title, 400 bad request", async () => {
+    const newBlog = {
+      author: 'WILL REJECT',
+      url: 'https://mathfails.com'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  
+  test.only("posting blog with no url, 400 bad request", async () => {
+    const newBlog = {
+      title: 'WILL FAIL',
+      author: 'WILL REJECT',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
   })
 })
 
