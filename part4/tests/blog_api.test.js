@@ -11,7 +11,7 @@ const initialBlogs = [
   {
     id:"6760cc0aa0fdbf802c5412d2",
     author:"Alex Park",
-    likes:0,
+    likes:2,
     title:"testing blog",
     url:"youtube.com"
   },
@@ -33,19 +33,19 @@ beforeEach(async () => {
 })
 
 describe.only('blog api tests', async () => {
-  test.only('blogs are returned as json', async() => {
+  test('blogs are returned as json', async() => {
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
   
-test.only('blog count returns 2', async() => {
+test('blog count returns 2', async() => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length,2)
   }) 
 
-  test.only('unique id is id', async () => {
+  test('unique id is id', async () => {
     const blogs = await api.get('/api/blogs')
     blogs.body.forEach((blog) => {
       assert.notStrictEqual(blog.id, undefined)
@@ -53,7 +53,7 @@ test.only('blog count returns 2', async() => {
     })
   })
 
-  test.only("creating a new blog with POST", async () => {
+  test("creating a new blog with POST", async () => {
     const newBlog = {
       title: 'A New World',
       author: 'Albert Einsten',
@@ -73,6 +73,23 @@ test.only('blog count returns 2', async() => {
     assert(titles.includes('A New World'))
   })
 
+  test.only("posting blog with likes property missing, default 0", async () => {
+    const newBlog = {
+      title: 'Will default to 0',
+      author: 'ZERO',
+      url: 'https://mathfails.com'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const likes = response.body.map(blog => blog.likes)
+    assert(likes.includes(0))
+  })
 })
 
 after(async () => {
