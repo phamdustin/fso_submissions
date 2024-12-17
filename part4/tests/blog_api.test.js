@@ -3,36 +3,22 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
+const helper = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
 
-const initialBlogs = [
-  {
-    id:"6760cc0aa0fdbf802c5412d2",
-    author:"Alex Park",
-    likes:2,
-    title:"testing blog",
-    url:"youtube.com"
-  },
-  {
-    id:"6760e1fd251ba40b20385e45",
-    title:"Go To Statement Considered Harmful",
-    author:"Edsger W. Dijkstra",
-    url:"https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf",
-    likes:5,
-  }
-]
+
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
+  let blogObject = new Blog(helper.initialBlogs[0])
   await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
+  blogObject = new Blog(helper.initialBlogs[1])
   await blogObject.save()
 })
 
-describe.only('blog api tests', async () => {
+describe('basic blog api checks', async () => {
   test('blogs are returned as json', async() => {
     await api
       .get('/api/blogs')
@@ -42,7 +28,7 @@ describe.only('blog api tests', async () => {
   
 test('blog count returns 2', async() => {
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length,2)
+    assert.strictEqual(response.body.length,helper.initialBlogs.length)
   }) 
 
   test('unique id is id', async () => {
@@ -52,7 +38,9 @@ test('blog count returns 2', async() => {
       assert.strictEqual(blog._id,undefined)
     })
   })
+})
 
+describe('adding new blogs', () => {
   test("creating a new blog with POST", async () => {
     const newBlog = {
       title: 'A New World',
@@ -67,9 +55,10 @@ test('blog count returns 2', async() => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
-    const titles = response.body.map(r => r.title)
-    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const titles = blogsAtEnd.map(n => n.title)
     assert(titles.includes('A New World'))
   })
 
@@ -86,8 +75,8 @@ test('blog count returns 2', async() => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
-    const likes = response.body.map(blog => blog.likes)
+    const blogsAtEnd = await helper.blogsInDb()
+    const likes = blogsAtEnd.map(blog => blog.likes)
     assert(likes.includes(0))
   })
 
@@ -114,6 +103,24 @@ test('blog count returns 2', async() => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+  })
+})
+
+describe.only('deleting blog', async() => {
+  test.only('deleting a single blog', async() => {
+    const initialBlogs = await helper.blogsInDb()
+    const blogToDelete = initialBlogs[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+ 
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(!titles.includes(blogToDelete.title))
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length-1)
   })
 })
 
