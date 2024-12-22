@@ -3,18 +3,15 @@ const Blog = require('../models/blog')
 
 const {info, error} = require('../utils/logger')
 
-blogRouter.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
 
-blogRouter.get('/blogs', async (request, response) => {
+blogRouter.get('/', async (request, response) => {
   console.log('grabbing list of blogs from database')
   const blogs = await Blog.find({})
   response.json(blogs)
   
 })
 
-blogRouter.get('/blogs/:id', async (request,response) => {
+blogRouter.get('/:id', async (request,response) => {
   const blog = await Blog.findById(request.params.id)
   if (blog) {
     response.json(blog)
@@ -23,7 +20,7 @@ blogRouter.get('/blogs/:id', async (request,response) => {
   }
 })
 
-blogRouter.post('/blogs', async (request, response) => {
+blogRouter.post('/', async (request, response) => {
   console.log("post router")
 
   if (!request.body.title || !request.body.url) {
@@ -41,7 +38,7 @@ blogRouter.post('/blogs', async (request, response) => {
 })
 
 
-blogRouter.delete('/blogs/:id', async (request,response) => {
+blogRouter.delete('/:id', async (request,response) => {
   console.log("delete router")
   try {
     await Blog.findByIdAndDelete(request.params.id)
@@ -51,7 +48,7 @@ blogRouter.delete('/blogs/:id', async (request,response) => {
   }
 })
 
-blogRouter.put('/blogs/:id', async (request,response) => {
+blogRouter.put('/:id', async (request,response) => {
   info("put router")
   const blog = request.body
 
