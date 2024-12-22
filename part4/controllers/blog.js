@@ -40,12 +40,8 @@ blogRouter.post('/', async (request, response) => {
 
 blogRouter.delete('/:id', async (request,response) => {
   console.log("delete router")
-  try {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
-  } catch (exception) {
-    next(exception)
-  }
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
 })
 
 blogRouter.put('/:id', async (request,response) => {
