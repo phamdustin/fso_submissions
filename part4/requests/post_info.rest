@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "LoL Blog",
-  "author": "Faker",
-  "url": "lolesports.com",
-  "likes": 12345
+  "title": "OW Blog",
+  "author": "Sinatra",
+  "url": "blizzard.com",
+  "likes": 54321,
+  "userId": "676896edb6a1b3b56d83b076"
 }
