@@ -106,8 +106,8 @@ describe('adding new blogs', () => {
   })
 })
 
-describe.only('deleting blog', async() => {
-  test.only('deleting a single blog', async() => {
+describe('deleting blog', async() => {
+  test('deleting a single blog', async() => {
     const initialBlogs = await helper.blogsInDb()
     const blogToDelete = initialBlogs[0]
 
@@ -123,6 +123,30 @@ describe.only('deleting blog', async() => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length-1)
   })
 })
+
+
+describe.only('updating existing blog', async() => {
+  test.only('updating likes of a single blog, success', async() => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    const newBlog = {
+      author: blogToUpdate.author,
+      likes: blogToUpdate.likes + 1,
+      title:"CYHANGESD",
+      url:"CYHANGESD"
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(newBlog)
+      .expect(201)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const likes = blogsAtEnd.map(b => b.likes)
+    assert(likes.includes(blogToUpdate.likes+1))
+  })
+})
+
 
 after(async () => {
   await mongoose.connection.close()

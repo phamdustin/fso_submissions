@@ -14,6 +14,15 @@ blogRouter.get('/blogs', async (request, response) => {
   
 })
 
+blogRouter.get('/blogs/:id', async (request,response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    repsonse.status(404).end()
+  }
+})
+
 blogRouter.post('/blogs', async (request, response) => {
   console.log("post router")
 
@@ -31,6 +40,7 @@ blogRouter.post('/blogs', async (request, response) => {
   }
 })
 
+
 blogRouter.delete('/blogs/:id', async (request,response) => {
   console.log("delete router")
   try {
@@ -40,5 +50,15 @@ blogRouter.delete('/blogs/:id', async (request,response) => {
     next(exception)
   }
 })
+
+blogRouter.put('/blogs/:id', async (request,response) => {
+  info("put router")
+  const blog = request.body
+
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new:true})
+  response.status(201).json(updatedBlog)
+
+})
+
 
 module.exports = blogRouter
