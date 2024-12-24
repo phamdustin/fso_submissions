@@ -1,8 +1,7 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 const {info, error} = require('../utils/logger')
+const middleware = require('../utils/middleware')
 require('dotenv').config()
 
 
@@ -18,11 +17,11 @@ blogRouter.get('/:id', async (request,response) => {
   if (blog) {
     response.json(blog)
   } else {
-    repsonse.status(404).end()
+    response.status(404).end()
   }
 })
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   console.log("post router")
 
   if (!request.body.title || !request.body.url) {
@@ -32,7 +31,6 @@ blogRouter.post('/', async (request, response) => {
   } else {
     const body = request.body
     const user = request.user
-
 
     const blog = new Blog({
       title: body.title,
@@ -51,11 +49,14 @@ blogRouter.post('/', async (request, response) => {
 })
 
 
-blogRouter.delete('/:id', async (request,response) => {
+blogRouter.delete('/:id',middleware.userExtractor, async (request,response) => {
   console.log("delete router")
 
   const user = request.user
   const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    return response.status(401).json({error:'Blog cannot be found'})
+  }
   if (blog.user.toString() === user.id.toString() ) {
     await Blog.findByIdAndDelete(request.params.id)
   } else {
