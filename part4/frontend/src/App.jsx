@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -72,10 +73,16 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setErrorMessage("new blog added!")
         setTitle('')
         setAuthor('')
         setUrl('')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
+
+    
 
 
   }
@@ -83,6 +90,11 @@ const App = () => {
     console.log("Logout button pressed")
     setUser(null)
     window.localStorage.removeItem('loggedBlogappUser')
+    setErrorMessage("Logged out successful")
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+
       
   } 
 
@@ -128,6 +140,7 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
+      <Notification message={errorMessage}/>
       {user == null && loginForm()}
       {user !=null && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button> </p>
