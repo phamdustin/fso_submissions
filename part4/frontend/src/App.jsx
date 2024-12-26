@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -84,10 +85,6 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       })
-
-    
-
-
   }
   const handleLogout = async (event) => {
     console.log("Logout button pressed")
@@ -118,7 +115,7 @@ const App = () => {
     const showWhenVisible = {display: blogFormVisible? '' : 'none'}
 
     return(
-      <div>
+/*       <div>
         <div style={hideWhenVisible}>
           <button onClick={() => setBlogFormVisible(true)}>Add Blog</button>
         </div>
@@ -131,6 +128,16 @@ const App = () => {
           />
         </div>
         <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
+      </div> */
+      <div>
+        <Togglable buttonLabel='Add blog'>
+        <BlogForm
+            title={title} author={author} url={url} addBlog={addBlog}
+            handleTitleChange={({target}) => setTitle(target.value)}
+            handleAuthorChange={({target}) => setAuthor(target.value)}
+            handleUrlChange={({target}) => setUrl(target.value)}
+          />
+        </Togglable>
       </div>
     )
   }
