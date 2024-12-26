@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -16,6 +17,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -110,33 +113,28 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        Title: <input
-          value={title}
-          name="Title"
-          onChange={({target}) => setTitle(target.value)}
-        />    
-      </div>
-      <div>
-        Author: <input 
-          value={author} 
-          name="Author" 
-          onChange={({target}) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        Url: <input
-          value={url}
-          name="Url"
-          onChange={({target}) => setUrl(target.value)}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+  const blogForm = () => {
+    const hideWhenVisible = {display: blogFormVisible? 'none': ''}
+    const showWhenVisible = {display: blogFormVisible? '' : 'none'}
 
-  )
+    return(
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogFormVisible(true)}>Add Blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogForm
+            title={title} author={author} url={url} addBlog={addBlog}
+            handleTitleChange={({target}) => setTitle(target.value)}
+            handleAuthorChange={({target}) => setAuthor(target.value)}
+            handleUrlChange={({target}) => setUrl(target.value)}
+          />
+        </div>
+        <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1>Blogs</h1>
@@ -144,7 +142,6 @@ const App = () => {
       {user == null && loginForm()}
       {user !=null && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button> </p>
-        <h2>Submit new blog</h2>
         {blogForm()}
         <h2>List of Blogs</h2>
         {blogs.map(blog => <Blog key={blog.id} blog={blog} />
