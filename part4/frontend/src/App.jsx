@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
@@ -13,6 +13,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const [user, setUser] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -50,7 +52,27 @@ const App = () => {
       }, 5000)
     }
   }
-
+  const printBlogs = () => {
+    const blogStyle= {
+      paddingTop: 10,
+      paddingLeft: 2,
+      border: 'solid',
+      borderWidth: 1,
+      marginBottom: 5
+    }
+    return(
+      blogs.map(
+        blog =>
+          <div key={blog.id} style={blogStyle}>
+            <p>{blog.title} by: {blog.author}</p>
+            <Togglable buttonLabel="view" ref={blogFormRef}>
+              
+              <Blog blog={blog} /> 
+            </Togglable>
+          </div> 
+        )
+      )
+  }
   const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
@@ -73,7 +95,6 @@ const App = () => {
 
       
   } 
-
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -85,7 +106,6 @@ const App = () => {
       <button type="submit">login</button>
     </form>
   )
-
   const blogForm = () => {
     return(
       <div>
@@ -130,8 +150,8 @@ const App = () => {
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button> </p>
         {blogForm()}
         <h2>List of Blogs</h2>
-        {blogs.map(blog => <Blog key={blog.id} blog={blog} />
-          )}
+        {printBlogs()}
+        {/* {blogs.map(blog => <Blog key={blog.id} blog={blog} />)} */}
         </div>
       }
     </div>
