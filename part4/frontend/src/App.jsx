@@ -86,13 +86,18 @@ const App = () => {
   }
 
   const addLike = (blogObject) => {
+    console.log(blogObject.blog)
     const newBlog = {
       author: blogObject.blog.author,
       id: blogObject.blog.id,
       likes: blogObject.blog.likes+1,
       title: blogObject.blog.title,
       url: blogObject.blog.url,
-      user: blogObject.blog.user.id
+      user: {
+        _id: blogObject.blog.user.id,
+        name:blogObject.blog.user.name,
+        username:blogObject.blog.user.username
+      }
     }
     console.log(newBlog)
 
@@ -101,7 +106,7 @@ const App = () => {
       .then(returnedBlog => {
         const index = blogs.findIndex(blog => blog.id===newBlog.id)
         if (index !== -1) {
-          setBlogs(prevArray => prevArray.map(blog=> blog.id === newBlog.id? newBlog: blog))
+          setBlogs(prevArray => prevArray.map(blog=> blog.id === newBlog.id? {...blog, likes: newBlog.likes}: blog))
         }
         setErrorMessage("like sent!")
         setTimeout(() => {
