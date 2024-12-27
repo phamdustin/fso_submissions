@@ -67,7 +67,7 @@ const App = () => {
             <p>{blog.title} by: {blog.author}</p>
             <Togglable buttonLabel="view" ref={blogFormRef}>
               
-              <Blog blog={blog} /> 
+              <Blog blog={blog} addLike={addLike} /> 
             </Togglable>
           </div> 
         )
@@ -83,6 +83,33 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       })
+  }
+
+  const addLike = (blogObject) => {
+    const newBlog = {
+      author: blogObject.blog.author,
+      id: blogObject.blog.id,
+      likes: blogObject.blog.likes+1,
+      title: blogObject.blog.title,
+      url: blogObject.blog.url,
+      user: blogObject.blog.user.id
+    }
+    console.log(newBlog)
+
+    blogService
+      .addLike(newBlog)
+      .then(returnedBlog => {
+        const index = blogs.findIndex(blog => blog.id===newBlog.id)
+        if (index !== -1) {
+          setBlogs(prevArray => prevArray.map(blog=> blog.id === newBlog.id? newBlog: blog))
+        }
+        setErrorMessage("like sent!")
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+
+
   }
   const handleLogout = async (event) => {
     console.log("Logout button pressed")
