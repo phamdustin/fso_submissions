@@ -60,6 +60,7 @@ const App = () => {
       borderWidth: 1,
       marginBottom: 5
     }
+    blogs.sort((a,b) => a.likes- b.likes)
     return(
       blogs.map(
         blog =>
@@ -70,7 +71,10 @@ const App = () => {
               <Blog blog={blog} addLike={addLike} /> 
             </Togglable>
           </div> 
-        )
+        ) 
+       
+
+  
       )
   }
   const addBlog = (blogObject) => {
