@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-  
+
     } catch(exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -68,19 +68,19 @@ const App = () => {
           <div key={blog.id} style={blogStyle}>
             <p>{blog.title} by: {blog.author}</p>
             <Togglable buttonLabel="view" ref={blogFormRef}>
-              
-              <Blog blog={blog} addLike={addLike} removeBlog={removeBlog}/> 
+
+              <Blog blog={blog} addLike={addLike} removeBlog={removeBlog}/>
             </Togglable>
-          </div> 
-        ) 
+          </div>
       )
+    )
   }
   const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage("new blog added!")
+        setErrorMessage('new blog added!')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -88,18 +88,17 @@ const App = () => {
   }
 
   const removeBlog = (blogObject) => {
-    
     const blogId = blogObject.blog.id
     if (window.confirm(`Remove blog ${blogObject.blog.title}?`)) {
       blogService
-      .deleteBlog(blogId)
-      .then(()=> {
-        setBlogs(blogs.filter((blog) => blog.id !== blogId))
-        setErrorMessage("blog removed")
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+        .deleteBlog(blogId)
+        .then(() => {
+          setBlogs(blogs.filter((blog) => blog.id !== blogId))
+          setErrorMessage('blog removed')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
 
   }
@@ -126,9 +125,9 @@ const App = () => {
       .then(returnedBlog => {
         const index = blogs.findIndex(blog => blog.id===newBlog.id)
         if (index !== -1) {
-          setBlogs(prevArray => prevArray.map(blog=> blog.id === newBlog.id? {...blog, likes: newBlog.likes}: blog))
+          setBlogs(prevArray => prevArray.map(blog => blog.id === newBlog.id? { ...blog, likes: newBlog.likes } : blog))
         }
-        setErrorMessage("like sent!")
+        setErrorMessage('like sent!')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -137,23 +136,22 @@ const App = () => {
 
   }
   const handleLogout = async (event) => {
-    console.log("Logout button pressed")
+    console.log('Logout button pressed')
     setUser(null)
     window.localStorage.removeItem('loggedBlogappUser')
-    setErrorMessage("Logged out successful")
+    setErrorMessage('Logged out successful')
     setTimeout(() => {
       setErrorMessage(null)
     }, 5000)
 
-      
-  } 
+  }
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        Username <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)}/>
+        Username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)}/>
       </div>
       <div>
-          Password <input type="text" value={password} name="Password" onChange={({target}) => setPassword(target.value)}/>
+          Password <input type="text" value={password} name="Password" onChange={({ target }) => setPassword(target.value)}/>
       </div>
       <button type="submit">login</button>
     </form>
@@ -165,7 +163,7 @@ const App = () => {
           <BlogForm createBlog={addBlog}/>
         </Togglable>
       </div>
-/*   <div>
+    /*   <div>
         <div style={hideWhenVisible}>
           <button onClick={() => setBlogFormVisible(true)}>Add Blog</button>
         </div>
@@ -179,7 +177,7 @@ const App = () => {
         </div>
         <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
       </div> */
-/*       <div>
+    /*       <div>
         <Togglable buttonLabel='Add blog'>
           <BlogForm
               title={title} author={author} url={url} addBlog={addBlog}
@@ -197,17 +195,16 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       <Notification message={errorMessage}/>
-      {user == null && loginForm()}
-      {user !=null && <div>
+      {user === null && loginForm()}
+      {user !== null && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button> </p>
         {blogForm()}
         <h2>List of Blogs</h2>
         {printBlogs()}
         {/* {blogs.map(blog => <Blog key={blog.id} blog={blog} />)} */}
-        </div>
+      </div>
       }
     </div>
-    
   )
 }
 
