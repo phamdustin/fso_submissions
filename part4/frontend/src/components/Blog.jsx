@@ -1,4 +1,4 @@
-const Blog = ({ blog, addLike }) => {
+const Blog = ({ blog, addLike, removeBlog }) => {
 
   return (
     
@@ -6,6 +6,7 @@ const Blog = ({ blog, addLike }) => {
       <p>{blog.url}</p>
       <p>likes {blog.likes} <button onClick={() => addLike({blog})}>like</button></p>
       <p>{blog.user.name}</p>
+      <button onClick={() => removeBlog({blog})}>remove</button>
     </div>  
   )
 }

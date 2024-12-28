@@ -60,7 +60,8 @@ const App = () => {
       borderWidth: 1,
       marginBottom: 5
     }
-    blogs.sort((a,b) => a.likes- b.likes)
+    blogs.sort((a,b) => a.likes- b.likes) // sort array in ascending order of likes
+
     return(
       blogs.map(
         blog =>
@@ -68,13 +69,10 @@ const App = () => {
             <p>{blog.title} by: {blog.author}</p>
             <Togglable buttonLabel="view" ref={blogFormRef}>
               
-              <Blog blog={blog} addLike={addLike} /> 
+              <Blog blog={blog} addLike={addLike} removeBlog={removeBlog}/> 
             </Togglable>
           </div> 
         ) 
-       
-
-  
       )
   }
   const addBlog = (blogObject) => {
@@ -89,7 +87,25 @@ const App = () => {
       })
   }
 
+  const removeBlog = (blogObject) => {
+    
+    const blogId = blogObject.blog.id
+    if (window.confirm(`Remove blog ${blogObject.blog.title}?`)) {
+      blogService
+      .deleteBlog(blogId)
+      .then(()=> {
+        setBlogs(blogs.filter((blog) => blog.id !== blogId))
+        setErrorMessage("blog removed")
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+    }
+
+  }
+
   const addLike = (blogObject) => {
+
     console.log(blogObject.blog)
     const newBlog = {
       author: blogObject.blog.author,
