@@ -27,7 +27,7 @@ const Blog = ({ blog, addLike, removeBlog }) => {
       </div>
 
       {visible && (
-        <div>
+        <div className='togglableContent'>
           <p>{blog.url}</p>
           <p>likes {blog.likes} <button onClick={() => addLike({ blog })}>like</button></p>
           <p>{blog.user.name}</p>
