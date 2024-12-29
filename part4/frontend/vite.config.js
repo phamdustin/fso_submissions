@@ -3,6 +3,12 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    globals: true, // no need for import keywords (describe,test and expect)
+    setupFiles: './testSetup.js'
+  },
+
   plugins: [react()],
   server: {
     proxy: {

@@ -53,7 +53,7 @@ const App = () => {
     }
   }
   const printBlogs = () => {
-    const blogStyle= {
+/*     const blogStyle= {
       paddingTop: 10,
       paddingLeft: 2,
       border: 'solid',
@@ -73,7 +73,12 @@ const App = () => {
             </Togglable>
           </div>
       )
+    ) */
+   return(
+    blogs.map(
+      blog => <Blog blog={blog} addLike = {addLike} removeBlog = {removeBlog} />
     )
+   )
   }
   const addBlog = (blogObject) => {
     blogService
