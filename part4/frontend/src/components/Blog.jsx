@@ -32,7 +32,6 @@ const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
           <p>{blog.url}</p>
           <p>likes {blog.likes} <button data-testid= 'like' onClick={() => addLike({ blog })}>like</button></p>
           <p>{blog.user.name}</p>
-          <p>Where is the username...</p>
           {deleteVisible && (
             <button data-testid='remove' onClick={() => removeBlog({ blog })}>remove</button>
           )}
