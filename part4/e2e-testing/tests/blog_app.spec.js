@@ -58,5 +58,18 @@ describe('Blog app', () => {
 
       await expect(page.getByText('How to submit a new blog')).toBeVisible()
     })
+
+    test.only('blog can be liked', async ({ page }) => {
+      await page.getByText('Add blog').click()
+      await page.getByTestId('blogform-title').fill('How to submit a new blog')
+      await page.getByTestId('blogform-author').fill('Admin')
+      await page.getByTestId('blogform-url').fill('tumblr.com')
+      await page.getByRole('button', { name: 'Submit' }).click()
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('like sent!')).toBeVisible()
+
+    })
   })
 })

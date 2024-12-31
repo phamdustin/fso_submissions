@@ -22,15 +22,16 @@ const Blog = ({ blog, addLike, removeBlog }) => {
     <div style={blogStyle} className='blog'>
       <div>
         <p>{blog.title} by: {blog.author}
-          <button onClick={toggleVisible}>{visible? 'Hide': 'View'}</button>
+          <button data-testid='view' onClick={toggleVisible}>{visible? 'Hide': 'View'}</button>
         </p>
       </div>
 
       {visible && (
         <div className='togglableContent'>
           <p>{blog.url}</p>
-          <p>likes {blog.likes} <button onClick={() => addLike({ blog })}>like</button></p>
+          <p>likes {blog.likes} <button data-testid= 'like' onClick={() => addLike({ blog })}>like</button></p>
           <p>{blog.user.name}</p>
+          <p>Where is the username...</p>
           <button onClick={() => removeBlog({ blog })}>remove</button>
         </div>
       )
