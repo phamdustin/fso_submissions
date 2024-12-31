@@ -72,5 +72,26 @@ describe('Blog app', () => {
       await expect(page.getByText('like sent!')).toBeVisible()
 
     })
+
+    test.only('blog can be deleted by same user', async ({ page }) => {
+      // Exercise 5.21
+
+      await page.getByText('Add blog').click()
+      await page.getByTestId('blogform-title').fill('How to submit a new blog')
+      await page.getByTestId('blogform-author').fill('Admin')
+      await page.getByTestId('blogform-url').fill('tumblr.com')
+      await page.getByRole('button', { name: 'Submit' }).click()
+
+      await page.getByRole('button', { name: 'view' }).click()
+
+      page.on('dialog', async dialog => { // initiating event listener
+        await dialog.accept() // will auto accept any dialogs that pops up
+      }); 
+      await page.getByRole('button', { name: 'remove' }).click()
+      
+
+    
+      await expect(page.getByText('blog removed')).toBeVisible()
+    })
   })
 })
