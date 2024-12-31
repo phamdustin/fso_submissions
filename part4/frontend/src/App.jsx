@@ -79,7 +79,7 @@ const App = () => {
       blogs.map(
         blog =>
           <div key={blog.id}>
-            <Blog blog={blog} addLike = {addLike} removeBlog = {removeBlog} />
+            <Blog blog={blog} addLike = {addLike} removeBlog = {removeBlog} loggedUser={user.username}/>
           </div>
       )
     )
@@ -98,16 +98,20 @@ const App = () => {
 
   const removeBlog = (blogObject) => {
     const blogId = blogObject.blog.id
-    if (window.confirm(`Remove blog ${blogObject.blog.title}?`)) {
-      blogService
-        .deleteBlog(blogId)
-        .then(() => {
-          setBlogs(blogs.filter((blog) => blog.id !== blogId))
-          setErrorMessage('blog removed')
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-        })
+    if (blogObject.blog.user.username === user.username) {
+      if (window.confirm(`Remove blog ${blogObject.blog.title}?`)) {
+        blogService
+          .deleteBlog(blogId)
+          .then(() => {
+            setBlogs(blogs.filter((blog) => blog.id !== blogId))
+            setErrorMessage('blog removed')
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
+      }
+    } else {
+      window.confirm('ERROR: Incorrect User ')
     }
 
   }

@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 
-const Blog = ({ blog, addLike, removeBlog }) => {
+const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
 
   const [visible, setVisible] = useState(false)
+  const [deleteVisible, setDeleteVisible] = useState(loggedUser === blog.user.username? true : false)
 
   const blogStyle= {
     paddingTop: 10,
@@ -32,7 +33,9 @@ const Blog = ({ blog, addLike, removeBlog }) => {
           <p>likes {blog.likes} <button data-testid= 'like' onClick={() => addLike({ blog })}>like</button></p>
           <p>{blog.user.name}</p>
           <p>Where is the username...</p>
-          <button data-testid='remove' onClick={() => removeBlog({ blog })}>remove</button>
+          {deleteVisible && (
+            <button data-testid='remove' onClick={() => removeBlog({ blog })}>remove</button>
+          )}
         </div>
       )
       }
