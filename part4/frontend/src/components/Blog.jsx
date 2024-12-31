@@ -12,7 +12,7 @@ const Blog = ({ blog, addLike, removeBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   const toggleVisible = () => {
     setVisible(!visible)
   }
@@ -21,9 +21,9 @@ const Blog = ({ blog, addLike, removeBlog }) => {
 
     <div style={blogStyle} className='blog'>
       <div>
-      <p>{blog.title} by: {blog.author}
-        <button onClick={toggleVisible}>{visible? 'Hide': 'View'}</button>
-      </p>
+        <p>{blog.title} by: {blog.author}
+          <button onClick={toggleVisible}>{visible? 'Hide': 'View'}</button>
+        </p>
       </div>
 
       {visible && (

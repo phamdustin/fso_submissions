@@ -53,7 +53,7 @@ const App = () => {
     }
   }
   const printBlogs = () => {
-/*     const blogStyle= {
+    /*     const blogStyle= {
       paddingTop: 10,
       paddingLeft: 2,
       border: 'solid',
@@ -74,11 +74,14 @@ const App = () => {
           </div>
       )
     ) */
-   return(
-    blogs.map(
-      blog => <Blog blog={blog} addLike = {addLike} removeBlog = {removeBlog} />
+    return(
+      blogs.map(
+        blog =>
+          <div key={blog.id}>
+            <Blog blog={blog} addLike = {addLike} removeBlog = {removeBlog} />
+          </div>
+      )
     )
-   )
   }
   const addBlog = (blogObject) => {
     blogService
@@ -151,7 +154,7 @@ const App = () => {
 
   }
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} data-testid='loginForm'>
       <div>
         Username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)}/>
       </div>
