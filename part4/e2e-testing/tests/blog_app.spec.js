@@ -4,10 +4,10 @@ describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('http://localhost:3003/api/testing/reset')
     await request.post('http://localhost:3003/api/users', {
-      user: {
-        name: 'Matti Luukkainen',
-        username: 'mluukkai',
-        password: 'salainen'
+      data: {
+        username: "mluukkai",
+        name: "tester",
+        password: "salainen"
       }
     })
 
@@ -23,20 +23,40 @@ describe('Blog app', () => {
 
   })
   describe('Login', () => {
-    test.only('succeeds with correct credentials', async ({ page }) => {
+    test('succeeds with correct credentials', async ({ page }) => {
       await page.getByTestId('username').fill('mluukkai')
       await page.getByTestId('password').fill('salainen')
       await page.getByRole('button', { name: 'login' }).click()
 
-      await expect(page.getByText('tester logged in')).toBeVisible
+      await expect(page.getByText('tester logged in')).toBeVisible()
     })
 
-    test.only('fails with incorrect credentials', async ({ page }) => {
+    test('fails with incorrect credentials', async ({ page }) => {
       await page.getByTestId('username').fill('mluukkai')
       await page.getByTestId('password').fill('incorrectPassword')
       await page.getByRole('button', { name: 'login' }).click()
 
-      await expect(page.getByText('Wrong credentials')).toBeVisible
+      await expect(page.getByText('Wrong credentials')).toBeVisible()
+    })
+  })
+
+  describe.only('When logged in', () => {
+    beforeEach( async ({ page }) => {
+      await page.getByTestId('username').fill('mluukkai')
+      await page.getByTestId('password').fill('salainen')
+      await page.getByRole('button', { name: 'login' }).click()
+
+      await expect(page.getByText('tester logged in')).toBeVisible()
+    })
+
+    test.only('new blog can be created', async({ page }) => {
+      await page.getByText('Add blog').click()
+      await page.getByTestId('blogform-title').fill('How to submit a new blog')
+      await page.getByTestId('blogform-author').fill('Admin')
+      await page.getByTestId('blogform-url').fill('tumblr.com')
+      await page.getByRole('button', { name: 'Submit' }).click()
+
+      await expect(page.getByText('How to submit a new blog')).toBeVisible()
     })
   })
 })
