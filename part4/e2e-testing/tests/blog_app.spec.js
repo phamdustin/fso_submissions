@@ -60,6 +60,7 @@ describe('Blog app', () => {
     })
 
     test.only('blog can be liked', async ({ page }) => {
+      // Exercise 5.20 
       await page.getByText('Add blog').click()
       await page.getByTestId('blogform-title').fill('How to submit a new blog')
       await page.getByTestId('blogform-author').fill('Admin')
