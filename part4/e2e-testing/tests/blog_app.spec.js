@@ -1,5 +1,5 @@
 const { test, expect, describe, beforeEach } = require('@playwright/test')
-const { loginWith, createNote } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -44,14 +44,14 @@ describe('Blog app', () => {
     })
 
     test.only('new blog can be created', async({ page }) => {
-      await createNote(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
+      await createBlog(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
 
       await expect(page.getByText('How to submit a new blog')).toBeVisible()
     })
 
     test.only('blog can be liked', async ({ page }) => {
       // Exercise 5.20 
-      await createNote(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
+      await createBlog(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
 
       await page.getByRole('button', { name: 'view' }).click()
       await page.getByRole('button', { name: 'like' }).click()
@@ -61,7 +61,7 @@ describe('Blog app', () => {
 
     test.only('blog can be deleted by same user', async ({ page }) => {
       // Exercise 5.21
-      await createNote(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
+      await createBlog(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
 
       await page.getByRole('button', { name: 'view' }).click()
 
@@ -74,7 +74,7 @@ describe('Blog app', () => {
     })
 
     test.only('blog remove button can only be seen by the creator', async ({ page, request }) => {
-      await createNote(page, 'Cant delete this one', 'Admin', 'tumblr.com')
+      await createBlog(page, 'Cant delete this one', 'Admin', 'tumblr.com')
       await request.post('http://localhost:3003/api/users', {
         data: {
           username: "asasa",
@@ -87,6 +87,52 @@ describe('Blog app', () => {
       await loginWith(page, 'asasa', 'salainen')
       await page.getByRole('button', { name: 'view' }).click()
       await expect(page.getByText('remove')).not.toBeVisible()
+    })
+
+    test.only('blogs arranged by number of likes', async ({ page, request }) => {
+      await request.post('http://localhost:3003/api/blogs', {
+        data: {  
+          "title": "OW Blog",
+          "author": "Sinatra",
+          "url": "blizzard.com",
+          "likes": 54321
+        }
+      }, 
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NzY4YTA2NGJjMDkxOWQ1NmQzMmM3Y2QiLCJpYXQiOjE3MzQ5MTMyNjJ9.hFcLNxmPVMEazuwz7ynRIc5lDuzKDhATPmtWVxrKIHo'
+      )
+      await createBlog(page, 'How to submit a new blog', 'Admin', 'tumblr.com')
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+
+      await page.getByRole('button', { name: 'hide' }).click()
+      await page.getByRole('button', { name: 'cancel' }).click()
+
+      await createBlog(page, 'Middle Blog', 'JFK', 'yahoo.com')
+      const buttons = await page.getByRole('button', { name: 'view' })
+      const second_button = buttons.nth(1)
+      await second_button.click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await page.getByRole('button', { name: 'hide' }).click()
+      await page.getByRole('button', { name: 'cancel' }).click()
+
+      await createBlog(page, 'Most likes', 'Trump', 'twitter.com')
+      const new_buttons = await page.getByRole('button', { name: 'view' })
+      const third_button = new_buttons.nth(2)
+      await third_button.click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await page.getByRole('button', { name: 'hide' }).click()
+      await page.getByRole('button', { name: 'cancel' }).click()
+      
+      await page.pause() 
+      const blogs = page.locator('.blog')
+      await expect(blogs.nth(0).locator('..').getByText('Most likes')).toBeVisible()
+      await expect(blogs.nth(1).locator('..').getByText('Middle Blog')).toBeVisible()
+      await expect(blogs.nth(2).locator('..').getByText('How to submit a new blog')).toBeVisible()
+      // await expect(page.locator('.showBasic').nth(1)).toContainText('Test Blog 2')
+
     })
   })
 })
