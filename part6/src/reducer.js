@@ -20,7 +20,7 @@ const counterReducer = (state = initialState, action) => {
       newBadState.bad = newBadState.bad + 1
       return newBadState
     case 'ZERO':
-      return state
+      return initialState
     default: return state
   }
   
