@@ -34,6 +34,8 @@ const anecdoteSlice = createSlice({
         id: getId(),
         votes: 0
       })
+      
+
     },
     upvote(state,action) {
       const id = action.payload
