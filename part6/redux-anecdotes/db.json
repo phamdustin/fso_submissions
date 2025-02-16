@@ -39,6 +39,16 @@
       "id": "7f2c",
       "content": "This should have votes this time",
       "votes": 0
+    },
+    {
+      "id": "a2a0",
+      "content": "Testing async anecdote adding",
+      "votes": 0
+    },
+    {
+      "id": "d9d9",
+      "content": "testing creation of new anecdote",
+      "votes": 0
     }
   ]
 }
