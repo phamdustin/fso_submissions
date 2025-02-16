@@ -1,19 +1,17 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { voteup } from '../reducers/anecdoteReducer'
-import { settingNotification, clearNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdote)
   const phrase = useSelector(state => state.filter)
   const dispatch = useDispatch()
-  const delay = ms => new Promise(res => setTimeout(res, ms));
+  //const delay = ms => new Promise(res => setTimeout(res, ms));
 
   const vote = async (id) => {
     console.log('vote', id)
     dispatch(voteup(id))
-    dispatch(settingNotification('Upvoted anecdote'))
-    await delay(5000)
-    dispatch(clearNotification())
+    dispatch(setNotification(`upvoted`,10))
   }
 
   const filteredAnecdotes = anecdotes.filter(anecdote => (
