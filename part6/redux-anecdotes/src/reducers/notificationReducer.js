@@ -19,7 +19,7 @@ export const { settingNotification, clearNotification } = notificationSlice.acti
 
 export const setNotification = (message, time) => {
   // Message : Message to update the notification state to
-  // Time : time in seconds to keep the message up
+  // Time : time in seconds to keep the message up.
   return async dispatch => {
     dispatch(settingNotification(message))
     setTimeout(() => {
