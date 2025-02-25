@@ -4,20 +4,9 @@ import { BrowserRouter as Router,
   useNavigate
 } from 'react-router-dom'
 
-/* const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <Router>
-      <div>
-        <Link to="/anecdotes" style={padding}>anecdotes</Link>
-        <Link to="/create-new" style={padding}>create new</Link>
-        <Link to='about' style={padding}>about</Link>
-      </div>
-    </Router>
-  )
-} */
+import { useField } from '../hooks/index'
+
+
 const Anecdote = ({ anecdotes }) => {
   const id = useParams().id
   const anecdote = anecdotes.find(n=> n.id === Number(id))
@@ -66,23 +55,22 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
 
+
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
-
-    
   }
 
   return (
@@ -91,15 +79,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          url
+          <input {...info} />
         </div>
         <button>create</button>
       </form>
@@ -156,11 +144,6 @@ const App = () => {
   }
   const padding = {
     paddingRight: 5
-  }
-  const style = { 
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
   }
   return (
 
