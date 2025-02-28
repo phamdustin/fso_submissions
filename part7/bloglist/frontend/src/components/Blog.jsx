@@ -1,23 +1,23 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
+import PropTypes from 'prop-types'
+import { useState } from 'react'
 
 const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(
     loggedUser === blog.user.username ? true : false,
-  );
+  )
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const toggleVisible = () => {
-    setVisible(!visible);
-  };
+    setVisible(!visible)
+  }
 
   return (
     <div style={blogStyle} className="blog">
@@ -25,7 +25,7 @@ const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
         <p data-testid="blog">
           {blog.title} by: {blog.author}
           <button data-testid="view" onClick={toggleVisible}>
-            {visible ? "Hide" : "View"}
+            {visible ? 'Hide' : 'View'}
           </button>
         </p>
       </div>
@@ -34,7 +34,7 @@ const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
         <div className="togglableContent">
           <p>{blog.url}</p>
           <p>
-            likes {blog.likes}{" "}
+            likes {blog.likes}{' '}
             <button data-testid="like" onClick={() => addLike({ blog })}>
               like
             </button>
@@ -48,12 +48,12 @@ const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   addLike: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
-};
-export default Blog;
+}
+export default Blog
