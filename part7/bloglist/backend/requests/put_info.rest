@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/675dfe12467ae9ce6abe40d6
+Content-Type: application/json
+
+{   
+      "author":"Alex Park",
+      "likes": 999999,
+      "title":"CYHANGESD",
+      "url":"CYHANGESD"
+}
