@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const countriesUrl = 'https://studies.cs.helsinki.fi/restcountries/api/name/'
+
+
 const useField = (type) => {
   const [value, setValue] = useState('')
 
   const onChange = (event) => {
     setValue(event.target.value)
+    console.log(`Value is now ${value}`)
   }
 
   return {
@@ -18,8 +22,18 @@ const useField = (type) => {
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect(() => {})
-
+  useEffect(() => {
+    axios
+      .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}?fullText=true`)
+      .then (res=> {
+        console.log('response.data ', res.data)
+        const country = {...res.data, found: true}
+        setCountry( country)
+      })
+      .catch(error => {
+        setCountry({found: false})
+      })
+  },[name])
   return country
 }
 
@@ -38,10 +52,10 @@ const Country = ({ country }) => {
 
   return (
     <div>
-      <h3>{country.data.name} </h3>
-      <div>capital {country.data.capital} </div>
-      <div>population {country.data.population}</div> 
-      <img src={country.data.flag} height='100' alt={`flag of ${country.data.name}`}/>  
+      <h3>{country.name.common} </h3>
+      <div>capital {country.capital} </div>
+      <div>population {country.population}</div> 
+      <img src={country.flags.png} height='100' alt={`flag of ${country.name}`}/>  
     </div>
   )
 }
