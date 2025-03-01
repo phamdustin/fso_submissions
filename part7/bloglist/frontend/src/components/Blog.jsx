@@ -17,6 +17,7 @@ const Blog = ({ blog, addLike, removeBlog, loggedUser }) => {
 
   const toggleVisible = () => {
     setVisible(!visible)
+    setDeleteVisible(!deleteVisible)
   }
 
   return (

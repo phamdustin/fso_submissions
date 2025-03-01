@@ -31,6 +31,7 @@ const addLike = async (blogObject) => {
     blogObject,
     config,
   )
+  console.log(`response data is ${response.data}`)
   return response.data
 }
 
@@ -40,7 +41,7 @@ const deleteBlog = async (blogId) => {
   }
   console.log('prior to sending delete request')
   const response = await axios.delete(`${baseUrl}/${blogId}`, config)
-  console.log(`response data is!!: ${response.data}`)
+  return response.data
 }
 
 export default { getAll, setToken, create, addLike, deleteBlog }

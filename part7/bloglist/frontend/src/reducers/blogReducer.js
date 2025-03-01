@@ -9,20 +9,24 @@ const blogSlice = createSlice({
       state.push(action.payload)
     },
     upvote(state,action) {
-      const originalBlog = action.payload
-      const changedBlog = { ...originalBlog,
-        votes: originalBlog.votes + 1 }
-      return state.map(blog => blog.id !== originalBlog.id? originalBlog : changedBlog)
+      console.log(`upvoting ${action.payload}`)
+      const changedBlog = action.payload
+      return state.map(blog => blog.id !== changedBlog.id? blog : changedBlog)
     },
     setBlogs(state,action) {
       return action.payload
 
+    },
+    removeBlogAction(state,action) {
+      console.log(`removing blog in reducer ${action.payload}`)
+      const id = action.payload
+      return state.filter((blog) => blog.id !== action.payload)
     }
   },
 
 })
 
-export const { addingBlog, upvote, setBlogs } = blogSlice.actions
+export const { addingBlog, upvote, setBlogs, removeBlogAction } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -43,11 +47,45 @@ export const createBlog = (content) => {
     dispatch(addingBlog(newBlog))
   }
 }
-export const addLike = (blog) => {
+export const addVote = (blogObject) => {
+  console.log("addVote action started")
+  console.log(blogObject)
+  const newBlog = {
+    author: blogObject.blog.author,
+    id: blogObject.blog.id,
+    likes: blogObject.blog.likes + 1,
+    title: blogObject.blog.title,
+    url: blogObject.blog.url,
+    user: {
+      _id: blogObject.blog.user.id,
+      name: blogObject.blog.user.name,
+      username: blogObject.blog.user.username,
+    },
+  } 
   return async dispatch => {
-    await blogService.addLike(blog)
-    dispatch(upvote(blog))
+    try {
+      console.log("In addVote of reducer")
+      const response = await blogService.addLike(newBlog)
+      console.log(response)
+      dispatch(upvote(newBlog))
+    }
+    catch (error) {
+      console.error('failed to add like', error)
+    }
   }
 }
 
+export const removeBlog = (blogObject) => {
+  const id = blogObject.blog.id
+  return async dispatch => {
+    try{
+      blogService.deleteBlog(id)
+      console.log('hi')
+      dispatch(removeBlogAction(id))
+    }
+    catch (error) {
+      console.error('failed to remove blog', error)
+    }
+  }
+}
 export default blogSlice.reducer
