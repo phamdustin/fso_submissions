@@ -11,13 +11,16 @@ import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import BlogList from './components/BlogList.jsx'
 
+import { setUserReducer, logoutUserReducer } from './reducers/userReducer'
+
 const App = () => {
   const dispatch = useDispatch()
 
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+
+  const user = useSelector(state => state.user)
 
 
   useEffect(() => {
@@ -28,7 +31,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUserReducer(user))
       blogService.setToken(user.token)
     }
   }, [])
@@ -40,13 +43,10 @@ const App = () => {
         username,
         password,
       })
-
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       console.log(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+      dispatch(setUserReducer(user))
     } catch (exception) {
       dispatch(setNotification('Wrong credentials. Try again', 5))
     }
@@ -71,37 +71,9 @@ const App = () => {
     }
   }
 
-  const addLike = (blogObject) => {
-    console.log(blogObject.blog)
-    const newBlog = {
-      author: blogObject.blog.author,
-      id: blogObject.blog.id,
-      likes: blogObject.blog.likes + 1,
-      title: blogObject.blog.title,
-      url: blogObject.blog.url,
-      user: {
-        _id: blogObject.blog.user.id,
-        name: blogObject.blog.user.name,
-        username: blogObject.blog.user.username,
-      },
-
-    }
-    dispatch(setNotification(`upvoted ${blogObject.blog.title}`, 10))
-
-    blogService.addLike(newBlog).then((returnedBlog) => {
-      const index = blogs.findIndex((blog) => blog.id === newBlog.id)
-      if (index !== -1) {
-        setBlogs((prevArray) =>
-          prevArray.map((blog) =>
-            blog.id === newBlog.id ? { ...blog, likes: newBlog.likes } : blog,
-          ),
-        )
-      }
-    })
-  }
   const handleLogout = async (event) => {
     console.log('Logout button pressed')
-    setUser(null)
+    dispatch(logoutUserReducer())
     window.localStorage.removeItem('loggedBlogappUser')
     dispatch(setNotification('Logout successful!', 5))
   }
