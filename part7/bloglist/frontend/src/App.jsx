@@ -6,11 +6,12 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import BlogList from './components/BlogList.jsx'
 
 const App = () => {
-
   const dispatch = useDispatch()
 
   const [blogs, setBlogs] = useState([])
@@ -20,7 +21,7 @@ const App = () => {
 
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -50,25 +51,9 @@ const App = () => {
       dispatch(setNotification('Wrong credentials. Try again', 5))
     }
   }
-  const printBlogs = () => {
-    blogs.sort((a, b) => b.likes - a.likes)
-
-    return blogs.map((blog) => (
-      <div key={blog.id}>
-        <Blog
-          blog={blog}
-          addLike={addLike}
-          removeBlog={removeBlog}
-          loggedUser={user.username}
-        />
-      </div>
-    ))
-  }
   const addBlog = (blogObject) => {
     console.log(blogObject)
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-    })
+    dispatch(createBlog(blogObject))
     dispatch(setNotification(`blog added: ${blogObject.title}`, 5))
   }
 
@@ -159,6 +144,7 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       <Notification />
+
       {user === null && loginForm()}
       {user !== null && (
         <div>
@@ -168,10 +154,13 @@ const App = () => {
           </p>
           {blogForm()}
           <h2>List of Blogs</h2>
-          {printBlogs()}
+          {/* {printBlogs()} */}
+          <BlogList />
           {/* {blogs.map(blog => <Blog key={blog.id} blog={blog} />)} */}
         </div>
+
       )}
+
     </div>
   )
 }
