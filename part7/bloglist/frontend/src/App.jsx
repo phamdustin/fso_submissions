@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
@@ -12,6 +11,12 @@ import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import BlogList from './components/BlogList.jsx'
 
 import { setUserReducer, logoutUserReducer } from './reducers/userReducer'
+import  UsersList  from './components/UsersList'
+
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -112,25 +117,39 @@ const App = () => {
     )
   }
 
-  return (
-    <div>
-      <h1>Blogs</h1>
-      <Notification />
-
-      {user === null && loginForm()}
-      {user !== null && (
-        <div>
+  const home = () => {
+    return (
+      <div>
           <p>
             {user.name} logged in{' '}
             <button onClick={handleLogout}>logout</button>{' '}
           </p>
           {blogForm()}
           <h2>List of Blogs</h2>
-          {/* {printBlogs()} */}
           <BlogList />
-          {/* {blogs.map(blog => <Blog key={blog.id} blog={blog} />)} */}
         </div>
+    )
+  }
+  const padding = {
+    padding: 5
+  }
+  return (
+    <div className="container">
+      <h1>Blogs</h1>
+      <Notification />
 
+      {user === null && loginForm()}
+      {user !== null && (
+        <Router>
+          <div>
+            <Link style= {padding} to ='/'>home</Link>
+            <Link style= {padding} to ='/users'>users</Link>  
+          </div>
+          <Routes>
+            <Route path='/' element={home()} />
+            <Route path='/users' element={<UsersList/>} />
+          </Routes>
+        </Router>
       )}
 
     </div>
