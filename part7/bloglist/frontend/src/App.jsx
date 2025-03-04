@@ -7,17 +7,19 @@ import loginService from './services/login'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { createBlog } from './reducers/blogReducer'
 import BlogList from './components/BlogList.jsx'
 
 import { setUserReducer, logoutUserReducer } from './reducers/userReducer'
-import  UsersList  from './components/UsersList'
+import  UserList  from './components/UserList.jsx'
 
 import {
   BrowserRouter as Router,
   Routes, Route, Link
 } from 'react-router-dom'
 
+import UsersBlogs from './components/UsersBlogs' 
+import { initializeUserList } from './reducers/userListReducer.js'
 const App = () => {
   const dispatch = useDispatch()
 
@@ -29,7 +31,7 @@ const App = () => {
 
 
   useEffect(() => {
-    dispatch(initializeBlogs())
+    dispatch(initializeUserList())
   }, [])
 
   useEffect(() => {
@@ -147,7 +149,8 @@ const App = () => {
           </div>
           <Routes>
             <Route path='/' element={home()} />
-            <Route path='/users' element={<UsersList/>} />
+            <Route path='/users' element={<UserList/>} />
+            <Route path='/users/:id' element={<UsersBlogs/>} />
           </Routes>
         </Router>
       )}

@@ -9,15 +9,6 @@ const BlogList = () => {
   const dispatch = useDispatch()
   console.log(blogs)
 
-/*   return blogs.map((blog) => (
-    <div key={blog.id}>
-      <Blog
-        blog={blog}
-        addLike={addLike}
-        removeBlog={removeBlog}
-        loggedUser={user.username}
-      />
-    </div> */
   return blogs.map((blog) =>(
     <div key={blog.id}>
       <Blog
