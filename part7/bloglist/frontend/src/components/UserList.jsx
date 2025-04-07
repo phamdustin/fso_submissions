@@ -29,12 +29,10 @@ const UsersList = () => {
   if (!users) {
     return null
   }
-  //console.log(users[0].blogs.length)
 
   return (
     <div>
       <h1>Users</h1>
-
       <Table striped>
         <thead>
           <tr>

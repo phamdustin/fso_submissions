@@ -76,6 +76,7 @@ export const addVote = (blogObject) => {
 }
 
 export const removeBlog = (blogObject) => {
+  // still needs to be fixed so only the same user who created can delete at least for "dispatch(removeBlogAction(id))"
   const id = blogObject.blog.id
   return async dispatch => {
     try{

@@ -20,6 +20,7 @@ import {
 
 import UsersBlogs from './components/UsersBlogs' 
 import { initializeUserList } from './reducers/userListReducer.js'
+import BlogView from './components/BlogView'
 const App = () => {
   const dispatch = useDispatch()
 
@@ -151,6 +152,7 @@ const App = () => {
             <Route path='/' element={home()} />
             <Route path='/users' element={<UserList/>} />
             <Route path='/users/:id' element={<UsersBlogs/>} />
+            <Route path='/blogs/:id' element={<BlogView/>} />
           </Routes>
         </Router>
       )}
